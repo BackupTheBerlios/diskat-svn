@@ -113,6 +113,7 @@ def printStats(stats):
     print "============================================================="
     print "Total            : % 6d" \
       % (stats[0] + stats[1] + stats[2] + stats[3])
+    print ""
 
 optlist, args = getopt.getopt(
   sys.argv[1:], "h?a:d:u:", ["add=", "delete=", "update=", "no-archive", "quiet", "tag=", "title=", "path="]
