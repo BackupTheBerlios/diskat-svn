@@ -67,7 +67,11 @@ class GenericCommandLineArchiver(IVolumeEnumerator.IVolumeEnumerator):
 		            pass
 
                         st = [0] * 10
-                        st[stat.ST_SIZE] = int(props["size"])
+                        try:
+                            st[stat.ST_SIZE] = int(props["size"])
+                        except:
+                            print props
+                            raise
                         if props.has_key("attr"):
                             if props["attr"][0] == 'D': st[stat.ST_MODE] = stat.S_IFDIR
 

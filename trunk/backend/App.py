@@ -15,6 +15,7 @@ class DbDumper(IFileInfoAcceptor.IFileInfoAcceptor):
     numDirectories = 0
     numArcFiles = 0
     numArcDirectories = 0
+    numArchives = 0
 
     def __init__(self, cursor, disk_id, feedbackObject):
         self.c = cursor
@@ -52,6 +53,8 @@ class DbDumper(IFileInfoAcceptor.IFileInfoAcceptor):
                 self.numDirectories = self.numDirectories + 1
             else: 
                 self.numFiles = self.numFiles + 1
+                if arc_flag == Const.ARC_IS_ARCHIVE:
+                    self.numArchives += 1
 
         return int(id)
 
@@ -66,7 +69,7 @@ class DbDumper(IFileInfoAcceptor.IFileInfoAcceptor):
         self.feedbackObject.feedback(None);
 
     def getStats(self):
-        s = [self.numFiles, self.numDirectories, self.numArcFiles, self.numArcDirectories]
+        s = [self.numFiles, self.numDirectories, self.numArcFiles, self.numArcDirectories, self.numArchives]
         return s
 
 class App:

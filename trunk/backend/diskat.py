@@ -106,12 +106,12 @@ def delete_operation(opts):
         print "Deleted disk", command_arg
 
 def printStats(stats):
-    print "Real files       : % 6d (% 6d directories + % 6d files)" \
+    print "Real files           : % 6d (% 6d directories + % 6d files)" \
       % (stats[0] + stats[1], stats[1], stats[0])
-    print "Files in archives: % 6d (% 6d directories + % 6d files)" \
-      % (stats[2] + stats[3], stats[3], stats[2])
-    print "============================================================="
-    print "Total            : % 6d" \
+    print "Files in% 3d archives: % 6d (% 6d directories + % 6d files)" \
+      % (stats[4], stats[2] + stats[3], stats[3], stats[2])
+    print "================================================================="
+    print "Total                : % 6d" \
       % (stats[0] + stats[1] + stats[2] + stats[3])
     print ""
 
