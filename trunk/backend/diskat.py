@@ -46,7 +46,7 @@ def enterTag():
                 return tag
 
 def add_operation(opts):
-    v = Volume.Volume(command_arg)
+    v = Volume.Volume(opts.get("--path", command_arg))
     ser_num = v.getSerialNumber()
     label = v.getLabel()
     print "The volume: Serial Number %s, Label '%s'" % (ser_num, label)
@@ -87,7 +87,7 @@ def add_operation(opts):
     print "Total        : % 6d" \
       % (stats[0] + stats[1] + stats[2] + stats[3])
 
-def delete_operation():
+def delete_operation(opts):
     disk = app.findDiskByTag(command_arg)
     if not disk:
         print "Disk not found"
@@ -96,10 +96,10 @@ def delete_operation():
         app.commit()
         print "Deleted disk", command_arg
 
-def update_operation():
-    disk = app.findDiskByTag(command_arg)
+def update_operation(opts):
+    disk = app.findDiskByTag(opts.get("--tag", command_arg))
     if not disk:
-        print "Disk not found"
+        add_operation(opts)
     else:
         v = Volume.Volume(opts.get("--path", disk.root))
         print v
@@ -139,9 +139,9 @@ app = App.App()
 if command == CMD_ADD: 
     add_operation(opts)
 elif command == CMD_DELETE: 
-    delete_operation()
+    delete_operation(opts)
 elif command == CMD_UPDATE: 
-    update_operation()
+    update_operation(opts)
 
 
 
