@@ -5,8 +5,6 @@ define('ARC_NONE', 0);
 define('ARC_IS_ARCHIVE', 1);
 define('ARC_IN_ARCHIVE', 2);
 
-define('LIMIT', 1000);
-
 /*
  * @return DB result set
  */
