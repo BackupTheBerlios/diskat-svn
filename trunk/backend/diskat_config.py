@@ -12,7 +12,7 @@ archiver_type["InfoZIP"] = {
 archiver_type["7-Zip"] = {
   "command": 'C:/misc/arc/7-Zip/7z.exe l "%s"',
   "start_pattern": r'^----',
-  "parse_pattern": r'^(?P<date>.+?)\s+(?P<time>.+?)\s+(?P<attr>.+?)\s+(?P<size>.+?)\s+(?P<compr_size>.+?)\s+(?P<name>.+)$',
+  "parse_pattern": r'^(?P<date>.{10}) (?P<time>.{8})\s+(?P<attr>.+?)\s+(?P<size>.+?)\s+(?P<compr_size>.+?)\s+(?P<name>.+)$',
   "end_pattern": r'^----',
 }
 
