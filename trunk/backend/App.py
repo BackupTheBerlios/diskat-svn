@@ -83,12 +83,12 @@ class App:
     def _findDisk(self, criteria):
         c = self.conn.getCursor()
         c.execute("""\
-            SELECT id
+            SELECT *
             FROM disk
             WHERE %s
         """ % criteria)
-        if c.rowcount == 0: return None
-        return c.fetchone().id
+        if c.rowcount != 1: return None
+        return c.fetchone()
 
     def findDiskBySerialAndLabel(self, serial, label):
 	return self._findDisk("serial='%s' AND label='%s'" % (serial, label))
@@ -115,16 +115,20 @@ class App:
             return 1
         return 0
 
-    def deleteDisk(self, id):
+    def clearDiskContents(self, diskId):
         c = self.conn.getCursor()
         c.execute("""
             DELETE FROM directory
             WHERE snapshot = %d
-        """ % id)
+        """ % diskId)
+
+    def deleteDisk(self, diskId):
+        self.clearDiskContents(diskId)
+        c = self.conn.getCursor()
         c.execute("""
             DELETE FROM disk
             WHERE id = %d
-        """ % id)
+        """ % diskId)
 
     def commit(self):
         self.conn.commit()
