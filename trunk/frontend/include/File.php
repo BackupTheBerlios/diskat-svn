@@ -1,14 +1,18 @@
 <?php
+include_once('config.inc');
 
 define('ARC_NONE', 0);
 define('ARC_IS_ARCHIVE', 1);
 define('ARC_IN_ARCHIVE', 2);
+
+define('LIMIT', 1000);
 
 /*
  * @return DB result set
  */
 function fetchFilesByCriteria($criteria, $more_tables = '', $sort = '')
 {
+  global $search_limit;
   if ($more_tables && sizeof($more_tables) > 0) {
     $more_tables = ", " . implode(', ', $more_tables);
   } else {
@@ -39,11 +43,13 @@ function fetchFilesByCriteria($criteria, $more_tables = '', $sort = '')
   	WHERE $criteria
   	AND directory.snapshot=disk.id
   	ORDER BY $sort
+  	LIMIT $search_limit
   ");
 }
 
 function fetchFilesByCategoryCriteria($criteria)
 {
+  global $search_limit;
   return db_query("
   	SELECT  directory.id as FileId,
   		tag as Tag, 
@@ -59,6 +65,7 @@ function fetchFilesByCategoryCriteria($criteria)
   	WHERE $criteria
   	AND directory.snapshot=disk.id
   	ORDER BY Tag, no
+  	LIMIT $search_limit
   ");
 }
 

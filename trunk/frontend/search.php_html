@@ -39,7 +39,7 @@ function allCheck(form)
 
 <? if (isset($files)) { ?>
 
-  <p>Files or directories matching by name (<?= db_num_rows($files) ?>):</p>
+  <p>Files or directories matching by name (<?= db_num_rows($files) == $search_limit ? $search_limit.'+' : db_num_rows($files) ?>):</p>
 
   <form name="searchResults" action="file_actions.php" method="POST">
   <?
