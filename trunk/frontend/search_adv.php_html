@@ -1,0 +1,25 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+<form action="search_adv.php">
+Search for: <input type="text" name="term"><br/>
+Size: from <input type="text" name="min_size"> (incl.) to <input type="text" name="max_size"> (excl.)<br/>
+Limit by tag: <input type="text" name="tag_pattern" value="F%"><br/>
+File category: <? html_select('category_not', array(' '=>' ', 'not'=>'not')); ?> <? renderFileCategorySelect(' '); ?><br>
+File category: <? html_select('category_not2', array(' '=>' ', 'not'=>'not')); ?> <? renderFileCategorySelect(' ', 'category2'); ?><br>
+File category: <? html_select('category_not3', array(' '=>' ', 'not'=>'not')); ?> <? renderFileCategorySelect(' ', 'category3'); ?><br>
+File category: <? html_select('category_not4', array(' '=>' ', 'not'=>'not')); ?> <? renderFileCategorySelect(' ', 'category4'); ?><br>
+<input type="checkbox" name="files_only" value="1" checked="1"/>Files only<br>
+<input type="checkbox" name="group_by_disk" value="1" checked="1"/>Group by disk<br>
+Sort by: <? html_select('sort', array('name'=>'Name', 'no'=>'Directory order')); ?><br>
+
+<input type="submit" name="bt_search" value="Search">
+<input type="reset" name="clear" value="Clear">
+</form>
+
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+.matchHilite {
+	background-color: pink;
+}
+
+.Directory {
+	font-weight: bold;
+}
+
+.InArchive {
+	font-style: italic;
+}
+
+.catList {
+	font-size: x-small;
+}
+
+.DiskHeading {
+	background-color: #c0c0c0;
+	text-align: center;
+	font-weight: bold;
+}
+
+TD.num {
+	text-align: right;
+}

@@ -1,0 +1,27 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+<h1>Disk search</h1>
+<form action="<?= $_SERVER['PHP_SELF'] ?>">
+Limit by tag: <input type="text" name="tag_pattern" value="%"><br/>
+Title substring: <input type="text" name="term"><br/>
+Disk category: <? html_select('category_not',  array(' '=>' ', 'not'=>'not')); ?> 
+	       <? renderDiskCategorySelect('category',  ' ', '&lt;empty&gt;'); ?><br>
+Disk category: <? html_select('category_not2', array(' '=>' ', 'not'=>'not')); ?> 
+               <? renderDiskCategorySelect('category2', ' '); ?><br>
+Disk category: <? html_select('category_not3', array(' '=>' ', 'not'=>'not')); ?> 
+               <? renderDiskCategorySelect('category3', ' '); ?><br>
+Disk category: <? html_select('category_not4', array(' '=>' ', 'not'=>'not')); ?> 
+               <? renderDiskCategorySelect('category4', ' '); ?><br>
+Sort by: <? html_select('sort', array('name'=>'Name', 'no'=>'Directory order')); ?><br>
+
+<input type="submit" name="bt_search" value="Search">
+<input type="reset" name="clear" value="Clear">
+</form>
+
+
+</body>
+</html>

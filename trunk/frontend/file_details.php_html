@@ -1,0 +1,50 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css" />
+<script type="text/javascript" language="JavaScript" src="js/nanotree.js"></script>
+<script type="text/javascript" language="JavaScript" src="js/xmlload.js"></script>
+</head>
+
+<body>
+
+<form name="searchResults" action="file_actions.php" method="POST">
+<? 
+  html_start_table();
+
+  foreach ($ids as $id) { 
+    $fullPath = $dir->getFullPath($id);
+    $dirPath = $dir->getDirectoryPath($id);
+    $filePath = $dir->getFilePath($id);
+    $row = fetchFileById($id);
+
+    $drive = $_SESSION['cd_drive'];
+    $drive = str_replace(":", "|", $drive);
+
+    html_start_row();
+
+    html_td('<input type="checkbox" name="ids[]" value="' . $id . '">');
+
+    html_td(
+      '<a href="file://' . $drive . $dirPath . '" target="explorer">' . '<img border="0" align="middle" src="images/folder.png">' . '</a> '
+      . '<a href="file://' . $drive . $filePath . '" target="explorer">' . $fullPath . '</a>'
+    );
+
+    if (isset($category_map[$id])) {
+      $cats = implode(', ', $category_map[$id]);
+    } else {
+      $cats = '&nbsp;';
+    }
+
+    html_td($cats);
+    html_end_row();
+  }
+
+  html_end_table();
+?>
+
+  <? renderFileCategorySelect(); html_select('cat_op', array('add'=>'Add', 'del'=>'Delete')); ?>
+  <input type="submit" name="bt_applycat" value="Apply category" />
+
+</form>
+</body>
+</html>

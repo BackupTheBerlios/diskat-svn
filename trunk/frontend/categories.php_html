@@ -1,0 +1,52 @@
+<html>
+<body>
+
+<?= render_messages(); ?>
+
+<h1><? if ($type == 2) { ?>Disk categories<? } else  {?>File categories<? } ?></h1>
+<p>
+<a href="<?= $_SERVER['PHP_SELF'] ?>?type=<?= 3 - $type ?>">Show
+<? if ($type == 1) { ?>Disk categories<? } else  {?>File categories<? } ?>
+</a>
+</p>
+
+<form method="POST">
+<table border="1" cellspacing="0">
+<tr>
+<th>X</th>
+<th>Name</th>
+<th>Rename to</th>
+</tr>
+
+<?
+    $map = array(1=>'File', 2=>'Disk');
+    while ($row = db_fetch_assoc($categories)) {
+      html_start_row();
+      html_td('<input type="checkbox" name="ids[]" value="' . $row['id'] . '">');
+      html_td($row['name']);
+      html_td('<input type="text" name="new_names[' . $row['id'] . ']">');
+      html_end_row();
+    }
+
+?>
+
+<tr>
+<td>
+&nbsp;
+</td>
+
+<td>
+<input type="hidden" name="add_type" value="<?= $type ?>">
+<input type="text" name="add_name">
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+
+</table>
+<input type="submit" name="bt_update" value="Update">
+</form>
+
+</body>
+</html>

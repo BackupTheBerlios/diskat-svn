@@ -1,0 +1,26 @@
+<html>
+<body>
+
+<form action="search.php" target="pane">
+<input type="text" name="term"><br/>
+<input type="radio" name="what" value="disk">Disk
+<input type="radio" name="what" value="file" checked="1">File
+<br>
+Limit by tag: <input type="text" name="tag_pattern" value="F%">
+<input type="submit" name="submit" value="Search">
+<input type="reset" name="clear" value="Clear">
+</form>
+
+<a href="search_adv.php" target="pane">Advanced search</a><br/>
+<a href="search_adv_disk.php" target="pane">Advanced disk search</a><br/>
+<a href="categories.php" target="pane">Manage categories</a><br/>
+<a href="empty.html" target="explorer">Clear explorer pane</a><br/>
+
+
+<form action="<?= $_SERVER['PHP_SELF'] ?>">
+CD Drive: <input type="text" name="cd_drive" size="6" value="<?= $_SESSION['cd_drive'] ?>">
+<input type="submit" name="submit" value="Set">
+</form>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css?1" type="text/css" />
+
+<script type="text/javascript" language="JavaScript">
+function allCheck(form)
+{
+  for (var i=0; i<form.elements.length; i++)
+  {
+    var e = form.elements[i];
+    if ((e.name != 'checkall') && (e.type=='checkbox'))
+    {
+      e.checked = form.checkall.checked;
+    }
+  }
+}
+</script>
+
+</head>
+
+<body>
+
+<? if (isset($pageMessage)) { ?>
+<p><?= $pageMessage ?></p>
+<? } ?>
+
+
+<? if (isset($disk_by_tag)) { ?>
+  <p>Exact match by disk tag:</p>
+  <? htmldb_render_table($disk_by_tag); ?>
+<? } ?>
+
+<? if (isset($disks)) { ?>
+
+  <p>Disks matching by label or title:</p>
+  <? htmldb_render_table($disks, array('title'=>'hilight', 'label'=>'hilight')); ?>
+
+<? } ?>
+
+<? if (isset($files)) { ?>
+
+  <p>Files or directories matching by name (<?= db_num_rows($files) ?>):</p>
+
+  <form name="searchResults" action="file_actions.php" method="POST">
+  <?
+    html_start_table();
+    $no = 1;
+    $last_tag = '';
+    while ($row = db_fetch_assoc($files)) {
+
+      $id = $row['FileId'];
+      
+      // New disk heading
+      if ($row['Tag'] != $last_tag) {
+        html_start_row();
+        if ($row['Label'] == '') {
+          $label = '<i>no label</i>';
+        } else {
+          $label = $row['Label'];
+        }
+        print '<td colspan="7" class="DiskHeading"><a href="disk_browse.php?id='.$row['DiskId'].'">' . $row['Tag'] . "</a> ($label)" . '</td>';
+        html_end_row();
+        $last_tag = $row['Tag'];
+      }
+
+      html_start_row();
+
+      // Hit #
+      html_td($no, array('class'=>'num'));
+
+      // Checkbox
+      html_td('<input type="checkbox" name="ids[]" value="' . $row['FileId'] . '">');
+      
+      $name = html_highlight_words(array($_REQUEST["term"]), $row['Filename']);
+      $extra = '';
+
+      if ($row['is_dir']) {
+        if ($row['Filename'] != "/") {
+          $name = "$name/";
+        }
+        $name = '<span class="Directory">' . $name . '</span>';
+        $extra = '<a href="dir_browse.php?id=' . $row['FileId'] . '" target="explorer"><img border="0" src="images/browse.png"/></a>'; 
+      }            
+      if ($row['arc_status'] == ARC_IN_ARCHIVE) {
+        $name = '<span class="InArchive">' . $name . '</span>';
+      }
+      if ($row['arc_status'] == ARC_IS_ARCHIVE) {
+        $name .= ' *';
+        $extra = '<a href="dir_browse.php?id=' . $row['FileId'] . '" target="explorer"><img border="0" src="images/browse.png"/></a>'; 
+      }
+
+      if ($row['BetterName'] != '') {
+        $name = '<strike>' . $name . '</strike> ' . $row['BetterName'];
+      }
+      html_td(
+        '<a href="file_actions.php?id=' . $row['FileId'] . '">'
+        . $name
+        . '</a>'
+        . $extra
+      );
+      html_td(number_format($row['Size']), array('class'=>'num'));
+      html_td(date_format($row['MDate']));
+
+      if (isset($category_map[$id])) {
+        sort($category_map[$id]);
+        $cats = implode('; ', $category_map[$id]);
+      } else {
+        $cats = '&nbsp;';
+      }
+
+      html_td('<span class="catList">' . $cats . '</span>');
+
+      $notes_img = "page-plus.png";
+      if ($row['Notes'] || $row['Description']) {
+        $notes_img = "page-check.png";
+      }
+      html_td('<a href="file_notes.php?id=' . $row['FileId'] . '">' . '<img border="0" src="images/' .$notes_img . '"/></a>');
+
+      html_end_row();
+
+      $no++;
+    }
+    html_end_table();
+  ?>
+
+  <br/>
+  <input type="checkbox" name="checkall" onClick="allCheck(document.searchResults);">Select all<br/><br/>
+  <input type="submit" name="bt_details" value="Details for selected files" />
+  <? renderFileCategorySelect(); html_select('cat_op', array('add'=>'Add', 'del'=>'Delete')); ?>
+  <input type="submit" name="bt_applycat" value="Apply category" />
+  </form>
+
+<? } ?>
+
+<p>
+<? if (isset($searchTime)) { ?> Search: <?= $searchTime ?>s <? } ?>
+<? if (isset($categoryTime)) { ?> Categories: <?= $categoryTime ?>s <? } ?>
+</p>
+
+</body>
+</html>

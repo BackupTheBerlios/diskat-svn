@@ -1,0 +1,27 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+<form action="file_notes.php" method="POST">
+<? $row = fetchFileById($ids[0]); ?>
+
+<input type="hidden" name="id" value="<?= $ids[0] ?>">
+Better name:<br/> 
+<input type="text" name="better_name" value="<?= $row['better_name'] ?>" size="50"><br/>
+Description:<br/> 
+<textarea name="description" rows="6" cols="50">
+<?= $row['Description'] ?>
+</textarea><br/>
+Notes:<br/>  
+<textarea name="notes" rows="6" cols="50">
+<?= $row['Notes'] ?>
+</textarea><br/>
+
+<input type="submit" name="bt_save_notes" value="Apply" />
+
+</form>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+<script type="text/javascript" language="JavaScript">
+function allCheck(form)
+{
+  for (var i=0; i<form.elements.length; i++) {
+    var e = form.elements[i];
+    if ((e.name != 'checkall') && (e.type=='checkbox')) {
+      e.checked = form.checkall.checked;
+    }
+  }
+}
+</script>
+
+</head>
+
+<body>
+
+<? if (isset($pageMessage)) { ?>
+<p><?= $pageMessage ?></p>
+<? } ?>
+
+<? if (isset($disks)) { ?>
+
+  <p>Disks matching by label or title (<?= db_num_rows($disks) ?>):</p>
+
+  <form name="searchResults" action="disk_actions.php" method="POST">
+  <input type="hidden" name="returnTo" value="<?= $_SERVER['PHP_SELF'] ?>">
+  <? echo saveOnRequest(array('what', 'term', 'tag_pattern')); ?>
+
+  <?
+    html_start_table();
+    echo '<tr>
+      <th>#</th>
+      <th>&nbsp</th>
+      <th>Tag</th>
+      <th>Label</th>
+      <th>Title</th>
+      <th># of Files</th>
+      <th>Date</th>
+      <th>Categories</th>
+    </tr>';
+
+    $no = 1;
+    $last_tag = '';
+    while ($row = db_fetch_assoc($disks)) {
+
+      $id = $row['id'];
+      
+      html_start_row();
+
+      // Hit #
+      html_td($no, array('class'=>'num'));
+
+      // Checkbox
+      html_td('<input type="checkbox" name="ids[]" value="' . $id . '">');
+
+      html_td($row['tag']);
+      
+      $name = html_highlight_words(array($_REQUEST["term"]), $row['title']);
+
+      html_td($row['label']);
+
+      html_td(
+        '<a href="disk_actions.php?id=' . $id . '">'
+        . $name
+        . '</a>'
+      );
+
+      html_td($row['n_files'], array('class'=>'num'));
+
+      html_td(date('Y-m-d H:i:s', $row['last_update']));
+
+      if (isset($category_map[$id])) {
+        sort($category_map[$id]);
+        $cats = implode('; ', $category_map[$id]);
+      } else {
+        $cats = '&nbsp;';
+      }
+      html_td($cats);
+
+      html_end_row();
+
+      $no++;
+    }
+    html_end_table();
+  ?>
+
+  <br/>
+  <input type="checkbox" name="checkall" onClick="allCheck(document.searchResults);">Select all<br/><br/>
+  <input type="submit" name="bt_details" value="Details for selected files" />
+  <? renderDiskCategorySelect('category'); html_select('cat_op', array('add'=>'Add', 'del'=>'Delete')); ?>
+  <input type="submit" name="bt_applycat" value="Apply category" />
+  </form>
+
+<? } ?>
+
+<p>
+<? if (isset($searchTime)) { ?> Search: <?= $searchTime ?>s <? } ?>
+<? if (isset($categoryTime)) { ?> Categories: <?= $categoryTime ?>s <? } ?>
+</p>
+
+</body>
+</html>
