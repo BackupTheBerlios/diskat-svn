@@ -26,6 +26,9 @@ class Volume(IVolumeEnumerator.IVolumeEnumerator):
         self.recurseArchives = 1
 #        os.path.join = _path_join
 
+    def __repr__(self):
+        return "<Volume root=%s>" % self.getRoot()
+    
     def getSerialNumber(self):
         return self.vol_info.getSerialNum()
 

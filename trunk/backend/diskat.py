@@ -7,8 +7,9 @@ import Volume
 import App
 import util
 
-CMD_ADD = 1
+CMD_ADD    = 1
 CMD_DELETE = 2
+CMD_UPDATE = 3
 command = 0
 command_arg = None
 
@@ -17,13 +18,15 @@ def usage():
     sys.stdout.write("Usage: discat.py <options> <command> <arguments>\n")
     sys.stdout.write("  Commands:\n")
     sys.stdout.write("	-a <disk_path>, --add=<disk_path> - add disk to catalog\n")
-    sys.stdout.write("	-d <disk_tag>, --delete=<disk_tag> - delete disk from catalog\n")
+    sys.stdout.write("	-d <disk_tag>,  --delete=<disk_tag> - delete disk from catalog\n")
+    sys.stdout.write("	-u <disk_tag>,  --update=<disk_tag> - update catalogued disk's contents\n")
     sys.stdout.write("	Add is the default command (you can just specify path)\n")
     sys.stdout.write("  Options:\n")
     sys.stdout.write("	--quiet - don't ask questions if possible\n")
-    sys.stdout.write("	--no-archives - do not catalog archive contents\n")
+    sys.stdout.write("	--no-archives - do not catalogue archive contents\n")
     sys.stdout.write("	--tag= - set disk tag (else ask)\n")
     sys.stdout.write("	--title= - set disk title (else ask)\n")
+    sys.stdout.write("	--path= - override disk's mount path (useful with -u)\n")
     sys.exit(1)
 
 def set_command(cmd, param):
@@ -48,9 +51,9 @@ def add_operation(opts):
     label = v.getLabel()
     print "The volume: Serial Number %s, Label '%s'" % (ser_num, label)
 
-    id = app.findDiskBySerialAndLabel(ser_num, label)
+    disk = app.findDiskBySerialAndLabel(ser_num, label)
     if not opts.has_key("--quiet"):
-        if id:
+        if disk:
             answer = raw_input("Disk with such serial and label already exists, continue (y/n)? ")
             if answer != "y":
                 return
@@ -85,22 +88,45 @@ def add_operation(opts):
       % (stats[0] + stats[1] + stats[2] + stats[3])
 
 def delete_operation():
-    id = app.findDiskByTag(command_arg)
-    if not id:
+    disk = app.findDiskByTag(command_arg)
+    if not disk:
         print "Disk not found"
     else:
-        app.deleteDisk(id)
+        app.deleteDisk(disk.id)
         app.commit()
         print "Deleted disk", command_arg
 
+def update_operation():
+    disk = app.findDiskByTag(command_arg)
+    if not disk:
+        print "Disk not found"
+    else:
+        v = Volume.Volume(opts.get("--path", disk.root))
+        print v
+        app.clearDiskContents(disk.id)
+        if opts.has_key("--no-archive"):
+            v.setRecurseArchives(0)
+        print "Adding files: ",
+        stats = app.catalogDisk(v, disk.id)
+        app.commit()
+        print "Updated disk", command_arg
+        print "\nIn filesystem: % 6d (% 6d directories + % 6d files)" \
+          % (stats[0] + stats[1], stats[1], stats[0])
+        print "In archives  : % 6d (% 6d directories + % 6d files)" \
+          % (stats[2] + stats[3], stats[3], stats[2])
+        print "========================================================="
+        print "Total        : % 6d" \
+          % (stats[0] + stats[1] + stats[2] + stats[3])
+
 optlist, args = getopt.getopt(
-  sys.argv[1:], "h?a:d:", ["add=", "delete=", "no-archive", "quiet", "tag=", "title="]
+  sys.argv[1:], "h?a:d:u:", ["add=", "delete=", "update=", "no-archive", "quiet", "tag=", "title=", "path="]
 )
 opts = {}
 for opt, param in optlist:
     if opt=='-h' or opt=='-?': usage()
     if opt in ["-a", "--add"]: set_command(CMD_ADD, param)
     if opt in ["-d", "--delete"]: set_command(CMD_DELETE, param)
+    if opt in ["-u", "--update"]: set_command(CMD_UPDATE, param)
     opts[opt] = param
 
 if command == 0 and len(args) == 1:
@@ -114,6 +140,8 @@ if command == CMD_ADD:
     add_operation(opts)
 elif command == CMD_DELETE: 
     delete_operation()
+elif command == CMD_UPDATE: 
+    update_operation()
 
 
 
