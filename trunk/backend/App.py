@@ -76,7 +76,7 @@ class App:
 
     def feedback(self, num):
         if num == None:
-            sys.stderr.write("done    \n")
+            sys.stderr.write("done    \r                       \r")
         else:
             sys.stderr.write("% 7d\b\b\b\b\b\b\b" % num)
 

@@ -49,7 +49,7 @@ def add_operation(opts):
     v = Volume.Volume(opts.get("--path", command_arg))
     ser_num = v.getSerialNumber()
     label = v.getLabel()
-    print "The volume: Serial Number %s, Label '%s'" % (ser_num, label)
+    print "Adding disk: Serial Number %s, Label '%s'" % (ser_num, label)
 
     disk = app.findDiskBySerialAndLabel(ser_num, label)
     if not opts.has_key("--quiet"):
@@ -76,16 +76,25 @@ def add_operation(opts):
     id = app.addDisk(v, tag, title)
     if opts.has_key("--no-archive"):
         v.setRecurseArchives(0)
-    print "Adding files: ",
+    sys.stdout.write("Adding files: ")
     stats = app.catalogDisk(v, id)
     app.commit()
-    print "\nIn filesystem: % 6d (% 6d directories + % 6d files)" \
-      % (stats[0] + stats[1], stats[1], stats[0])
-    print "In archives  : % 6d (% 6d directories + % 6d files)" \
-      % (stats[2] + stats[3], stats[3], stats[2])
-    print "========================================================="
-    print "Total        : % 6d" \
-      % (stats[0] + stats[1] + stats[2] + stats[3])
+    printStats(stats)
+
+def update_operation(opts):
+    disk = app.findDiskByTag(opts.get("--tag", command_arg))
+    if not disk:
+        add_operation(opts)
+    else:
+        v = Volume.Volume(opts.get("--path", disk.root))
+        app.clearDiskContents(disk.id)
+        if opts.has_key("--no-archive"):
+            v.setRecurseArchives(0)
+        sys.stdout.write("Adding files: ")
+        stats = app.catalogDisk(v, disk.id)
+        app.commit()
+        print "Updated disk", command_arg
+        printStats(stats)
 
 def delete_operation(opts):
     disk = app.findDiskByTag(command_arg)
@@ -96,27 +105,14 @@ def delete_operation(opts):
         app.commit()
         print "Deleted disk", command_arg
 
-def update_operation(opts):
-    disk = app.findDiskByTag(opts.get("--tag", command_arg))
-    if not disk:
-        add_operation(opts)
-    else:
-        v = Volume.Volume(opts.get("--path", disk.root))
-        print v
-        app.clearDiskContents(disk.id)
-        if opts.has_key("--no-archive"):
-            v.setRecurseArchives(0)
-        print "Adding files: ",
-        stats = app.catalogDisk(v, disk.id)
-        app.commit()
-        print "Updated disk", command_arg
-        print "\nIn filesystem: % 6d (% 6d directories + % 6d files)" \
-          % (stats[0] + stats[1], stats[1], stats[0])
-        print "In archives  : % 6d (% 6d directories + % 6d files)" \
-          % (stats[2] + stats[3], stats[3], stats[2])
-        print "========================================================="
-        print "Total        : % 6d" \
-          % (stats[0] + stats[1] + stats[2] + stats[3])
+def printStats(stats):
+    print "Real files       : % 6d (% 6d directories + % 6d files)" \
+      % (stats[0] + stats[1], stats[1], stats[0])
+    print "Files in archives: % 6d (% 6d directories + % 6d files)" \
+      % (stats[2] + stats[3], stats[3], stats[2])
+    print "============================================================="
+    print "Total            : % 6d" \
+      % (stats[0] + stats[1] + stats[2] + stats[3])
 
 optlist, args = getopt.getopt(
   sys.argv[1:], "h?a:d:u:", ["add=", "delete=", "update=", "no-archive", "quiet", "tag=", "title=", "path="]
