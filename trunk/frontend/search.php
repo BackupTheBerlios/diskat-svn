@@ -21,7 +21,8 @@ if (1 || $_REQUEST["submit"]) {
   }
 
   if ($_REQUEST["what"] == "disk") {
-    $t = $_REQUEST["term"];
+    saveSearchParams($_SERVER['PHP_SELF'], array('what', 'tag_pattern', 'tag', 'term'));
+    $t = $_REQUEST['term'];
     $tag = $_REQUEST['tag_pattern'];
     $disks = fetchDisksByCriteria("tag LIKE '$tag' AND (title LIKE '%$t%' OR label LIKE '%$t%')");
     if (db_num_rows($disks) == 0) {
@@ -33,6 +34,7 @@ if (1 || $_REQUEST["submit"]) {
   }
 
   if ($_REQUEST["what"] == "file") {
+    saveSearchParams($_SERVER['PHP_SELF'], array('what', 'tag_pattern', 'tag', 'term'));
     $crit = "(Filename LIKE '%".$_REQUEST["term"]."%' OR BetterName LIKE '%".$_REQUEST["term"]."%')";
     if (isset($_REQUEST["tag_pattern"])) {
       $crit .= "AND disk.tag LIKE '" . $_REQUEST['tag_pattern'] . "'";

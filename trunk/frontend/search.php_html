@@ -130,6 +130,8 @@ function allCheck(form)
   <input type="submit" name="bt_applycat" value="Apply category" />
   </form>
 
+<? echo returnToSearchResultsButton(); ?>
+
 <? } ?>
 
 <p>

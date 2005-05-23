@@ -33,6 +33,15 @@ function make_category_criteria($categoryId, $not) {
 db_open();
 
 if (isset($_REQUEST['bt_search'])) {
+  saveSearchParams(
+    $_SERVER['PHP_SELF'], 
+    array('bt_search', 'tag_pattern', 'term',
+      'category', 'category2', 'category3', 'category4', 
+      'category_not', 'category_not2', 'category_not3', 'category_not4', 
+      'sort', 
+    )
+  );
+
   htmldb_set_hilight_words(array($_REQUEST["term"]));
 
   $tables = array();

@@ -12,6 +12,7 @@ if ($_REQUEST['cat_op'] == 'add') {
 
 echo render_messages();
 
-echo returnButton(array('what', 'term', 'tag_pattern'));
+echo returnToSearchResultsButton();
+
 
 ?>

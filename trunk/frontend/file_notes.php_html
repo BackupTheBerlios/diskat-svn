@@ -21,7 +21,9 @@ Notes:<br/>
 </textarea><br/>
 
 <input type="submit" name="bt_save_notes" value="Apply" />
-
 </form>
+
+<? echo returnToSearchResultsButton(); ?>
+
 </body>
 </html>

@@ -11,5 +11,6 @@ if ($_REQUEST['cat_op'] == 'add') {
 }
 
 echo render_messages();
+echo returnToSearchResultsButton();
 
 ?>

@@ -122,4 +122,23 @@ function returnButton($params) {
 	return $res;
 }
 
+function saveSearchParams($returnTo, $params) {
+        $arr = array('returnTo' => $_SERVER['PHP_SELF']);
+	foreach ($params as $p) {
+		$arr[$p] = $_REQUEST[$p];
+	}
+	$_SESSION['savedSearch'] = $arr;
+}
+
+function returnToSearchResultsButton() {
+	$res = '';
+	$res = '<form method="POST" action="' . $_SESSION['savedSearch']['returnTo'] . '">';
+	foreach ($_SESSION['savedSearch'] as $k=>$v) {
+		$res .= '<input type="hidden" name="' . $k . '" value="' . $v. '">' . "\n";
+	}
+	$res .= '<input type="submit" value="Return to search results">';
+	$res .= '</form>';
+	return $res;
+}
+
 ?>
