@@ -1,4 +1,5 @@
 <?php
+include_once('include/common.php');
 include_once('include/db.php');
 include_once('include/html_db.php');
 include_once('include/Disk.php');
