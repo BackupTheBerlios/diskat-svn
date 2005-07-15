@@ -53,12 +53,12 @@ function allCheck(form)
       // New disk heading
       if ($row['Tag'] != $last_tag) {
         html_start_row();
-        if ($row['Label'] == '') {
-          $label = '<i>no label</i>';
+        if ($row['DiskTitle'] == '') {
+          $title = '<i>no title</i>';
         } else {
-          $label = $row['Label'];
+          $title = $row['DiskTitle'];
         }
-        print '<td colspan="7" class="DiskHeading"><a href="disk_browse.php?id='.$row['DiskId'].'">' . $row['Tag'] . "</a> ($label)" . '</td>';
+        print '<td colspan="7" class="DiskHeading"><a href="disk_browse.php?id='.$row['DiskId'].'">' . $row['Tag'] . "</a> ($title)" . '</td>';
         html_end_row();
         $last_tag = $row['Tag'];
       }
