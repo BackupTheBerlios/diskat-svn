@@ -8,6 +8,8 @@ empty.html \
 file_actions.php \
 file_category.php \
 file_details.php_html \
+file_multipart.php \
+file_multipart.php_html \
 file_notes.php \
 file_notes.php_html \
 dir_browse.php \

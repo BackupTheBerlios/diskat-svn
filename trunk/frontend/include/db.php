@@ -37,8 +37,7 @@ function db_quote($str) {
   return sqlite_escape_string($str);
 }
 
-function db_select_single_value($sql)
-{
+function db_select_single_value($sql) {
   $res = db_query($sql);
   $row = sqlite_fetch_array($res);
   return $row[0];
@@ -52,7 +51,11 @@ function db_generate_update($table, $id, $data) {
     $sql .= " $k='". db_quote($v) . "'";
     $first = 0;
   }
-  $sql .= " WHERE id=$id";
+  if (is_array($id)) {
+    $sql .= " WHERE id IN ('" . implode("','", $id) . "')";
+  } else {
+    $sql .= " WHERE id=$id";
+  }
   return $sql;
 }
 

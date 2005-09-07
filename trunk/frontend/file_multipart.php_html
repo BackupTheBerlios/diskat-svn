@@ -1,0 +1,44 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css" />
+<script type="text/javascript" language="JavaScript" src="js/nanotree.js"></script>
+<script type="text/javascript" language="JavaScript" src="js/xmlload.js"></script>
+</head>
+
+<body>
+
+<h1>Create multi-part file entry</h1>
+<p><?= sizeof($ids) ?> files:</p>
+<form name="searchResults" action="file_multipart.php" method="POST">
+<? 
+  print(saveOnRequest(array('ids')));
+  $multipartFiles = array();
+
+  print("<ul>\n");
+
+  foreach ($ids as $id) { 
+    $fullPath = $dir->getFullPath($id);
+    $dirPath = $dir->getDirectoryPath($id);
+    $filePath = $dir->getFilePath($id);
+    $row = fetchFileById($id);
+    $multipartFiles[$id] = $row['Filename'];
+
+    $drive = $_SESSION['cd_drive'];
+    $drive = str_replace(":", "|", $drive);
+
+    print("<li>${row['Filename']}");
+
+  }
+
+  print("</ul>");
+?>
+
+  Main file: <? html_select('main_file', $multipartFiles); ?>
+  <input type="submit" name="bt_create" value="Create" />
+
+</form>
+
+<? echo returnToSearchResultsButton(); ?>
+
+</body>
+</html>

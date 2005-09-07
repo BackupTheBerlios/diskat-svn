@@ -1,5 +1,6 @@
 <?php
 include_once('config.inc');
+include_once('include/db.php');
 
 define('ARC_NONE', 0);
 define('ARC_IS_ARCHIVE', 1);
@@ -36,11 +37,13 @@ function fetchFilesByCriteria($criteria, $more_tables = '', $sort = '')
   		directory.description as Description, 
   		directory.notes AS Notes, 
   		label AS Label,
-  		mdate AS MDate
+  		disk.title AS DiskTitle,
+  		mdate AS MDate,
+  		main_file
   	FROM disk, directory $more_tables
   	WHERE $criteria
   	AND directory.snapshot=disk.id
-  	ORDER BY $sort
+  	ORDER BY directory.main_file DESC, $sort
   	LIMIT $search_limit
   ");
 }
@@ -140,9 +143,13 @@ class DirectoryResolver{
 
   var $cache;
 
-  function DirectoryResolver()
-  {
+  function DirectoryResolver() {
     $this->cache = array();
+  }
+
+  function getFileName($id) {
+    $pathElement = $this->getPathElementById($id);
+    return $pathElement['name'];
   }
 
   function getFullPath($id) {

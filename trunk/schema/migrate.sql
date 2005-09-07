@@ -12,10 +12,12 @@ CREATE TABLE directory_t(
   size INT NOT NULL DEFAULT 0,
   is_dir INT NOT NULL DEFAULT 0,
   arc_status INT NOT NULL DEFAULT 0,
+  mdate VARCHAR(14) NOT NULL DEFAULT '00000000000000',
   better_name VARCHAR(512) NOT NULL DEFAULT '',
   description VARCHAR(16384) NOT NULL DEFAULT '',
   notes VARCHAR(16384) NOT NULL DEFAULT ''
 );
+
 INSERT INTO directory_t SELECT * FROM directory;
 DROP TABLE directory;
 
@@ -29,6 +31,7 @@ CREATE TABLE directory(
   size INT NOT NULL DEFAULT 0,
   is_dir INT NOT NULL DEFAULT 0,
   arc_status INT NOT NULL DEFAULT 0,
+  main_file INT NOT NULL DEFAULT 0,
   mdate VARCHAR(14) NOT NULL DEFAULT '00000000000000',
   better_name VARCHAR(512) NOT NULL DEFAULT '',
   description VARCHAR(16384) NOT NULL DEFAULT '',
@@ -38,7 +41,7 @@ CREATE TABLE directory(
 CREATE INDEX dir_snapshot ON directory(snapshot);
 CREATE INDEX dir_parent ON directory(parent);
 
-INSERT INTO directory(id, snapshot, no, parent, name, extension, size, is_dir, arc_status, better_name, description, notes)
+INSERT INTO directory(id, snapshot, no, parent, name, extension, size, is_dir, arc_status, mdate, better_name, description, notes)
 SELECT *
 FROM directory_t;
 DROP TABLE directory_t;

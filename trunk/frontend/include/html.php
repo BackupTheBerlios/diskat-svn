@@ -109,7 +109,14 @@ function html_select($name, $assoc)
 function saveOnRequest($params) {
         $res = '';
 	foreach ($params as $p) {
-		$res .= '<input type="hidden" name="' . $p . '" value="' . $_REQUEST[$p]. '">';
+		if (is_array($_REQUEST[$p])) {
+			$items = array();
+			foreach ($_REQUEST[$p] as $i) {
+				$res .= '<input type="hidden" name="' . $p . '[]" value="' . $i. '">' . "\n";
+			}
+		} else {
+			$res .= '<input type="hidden" name="' . $p . '" value="' . $_REQUEST[$p]. '">';
+		}	
 	}
 	return $res;
 }

@@ -8,6 +8,9 @@ CREATE TABLE directory(
   size INT NOT NULL DEFAULT 0,
   is_dir INT NOT NULL DEFAULT 0,
   arc_status INT NOT NULL DEFAULT 0,
+  -- reference to "main" file of several-files collection. 
+  --- if != 0, doesn't participate in search
+  main_file INT NOT NULL DEFAULT 0,
   mdate VARCHAR(14) NOT NULL DEFAULT '00000000000000',
   better_name VARCHAR(512) NOT NULL DEFAULT '',
   description VARCHAR(16384) NOT NULL DEFAULT '',

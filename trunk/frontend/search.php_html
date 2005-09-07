@@ -43,12 +43,34 @@ function allCheck(form)
 
   <form name="searchResults" action="file_actions.php" method="POST">
   <?
+
+    function renderFilename($row) {
+      $name = $row['Filename'];
+      if ($row['BetterName'] != '') {
+        $name = '<strike>' . $name . '</strike> ' . $row['BetterName'];
+      }
+      return $name;
+    }
+    
+    
     html_start_table();
     $no = 1;
     $last_tag = '';
+    $multiparts = array();
+
     while ($row = db_fetch_assoc($files)) {
 
       $id = $row['FileId'];
+
+      if ($row['main_file'] != 0) {
+        $a = array();
+        if (isset($multiparts[$row['main_file']])) {
+          $a = $multiparts[$row['main_file']];
+        }
+        $a[] = $row;
+        $multiparts[$row['main_file']] = $a;
+        continue;
+      }
       
       // New disk heading
       if ($row['Tag'] != $last_tag) {
@@ -92,6 +114,18 @@ function allCheck(form)
       if ($row['BetterName'] != '') {
         $name = '<strike>' . $name . '</strike> ' . $row['BetterName'];
       }
+
+      if (isset($multiparts[$row['FileId']])) {
+        $names = array();
+        foreach ($multiparts[$row['FileId']] as $f) {
+          $n = renderFilename($f);
+          if ($f['Tag'] != $row['Tag']) {
+            $n = "<b>[${f['Tag']}]</b> " . $n;
+          } 
+          $names[] = $n;
+        }
+        $extra .= "<br/>\n" . implode("<br/>", $names);
+      }
       html_td(
         '<a href="file_actions.php?id=' . $row['FileId'] . '">'
         . $name
@@ -128,6 +162,8 @@ function allCheck(form)
   <input type="submit" name="bt_details" value="Details for selected files" />
   <? renderFileCategorySelect(); html_select('cat_op', array('add'=>'Add', 'del'=>'Delete')); ?>
   <input type="submit" name="bt_applycat" value="Apply category" />
+  <br/>
+  <input type="submit" name="bt_multipart" value="Mark as multipart file" />
   </form>
 
 <? echo returnToSearchResultsButton(); ?>

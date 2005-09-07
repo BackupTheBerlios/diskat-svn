@@ -19,6 +19,8 @@ if (isset($_REQUEST["ids"])) {
 header('Content-Type: text/html; charset='.$config_charset);
 if (isset($_REQUEST["bt_applycat"])) {
   include('file_category.php');
+} else if (isset($_REQUEST["bt_multipart"])) {
+  include('file_multipart.php_html');
 } else {
 //if (isset($_REQUEST["bt_details"])) {
   $category_map = getFileCategories($ids);
