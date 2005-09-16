@@ -5,7 +5,7 @@
 
 <h1><? if ($type == 2) { ?>Disk categories<? } else  {?>File categories<? } ?></h1>
 <p>
-<a href="<?= $_SERVER['PHP_SELF'] ?>?type=<?= 3 - $type ?>">Show
+<a href="<?= $_SERVER['PHP_SELF'] ?>?type=<?= $type == CATEGORY_FILE ? CATEGORY_DISK : CATEGORY_FILE ?>">Show
 <? if ($type == 1) { ?>Disk categories<? } else  {?>File categories<? } ?>
 </a>
 </p>

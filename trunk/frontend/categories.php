@@ -4,6 +4,7 @@ include_once('include/db.php');
 include_once('include/html_db.php');
 include_once('include/Disk.php');
 include_once('include/File.php');
+include_once('include/Category.php');
 include_once('include/Messages.php');
 include_once('config.inc');
 
@@ -48,7 +49,7 @@ if (isset($_REQUEST["bt_update"])) {
 if (isset($_REQUEST['type'])) {
   $type = $_REQUEST['type'];
 } else {
-  $type = 1;
+  $type = CATEGORY_FILE;
 }
 
 $categories = db_query("

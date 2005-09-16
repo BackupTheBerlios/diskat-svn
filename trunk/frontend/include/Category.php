@@ -1,5 +1,8 @@
 <?php
 
+define('CATEGORY_FILE', 1);
+define('CATEGORY_DISK', 2);
+
 function renderFileCategorySelect($addDefault = 0, $name = 'category') {
   $categories = db_query("
   	SELECT id, name 

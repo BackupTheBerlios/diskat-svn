@@ -42,7 +42,7 @@ style.css \
 images/* \
 js/* \
 
-install:
+deploy:
 	rm -rf $(HTDOCS_ROOT)/$(WEBAPP)
 	mkdir -p $(HTDOCS_ROOT)/$(WEBAPP)
 	cp -r --parents $(FILES) $(HTDOCS_ROOT)/$(WEBAPP)
