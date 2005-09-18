@@ -15,6 +15,7 @@ Limit by tag: <input type="text" name="tag_pattern" value="F%">
 <a href="search_adv_disk.php" target="pane">Advanced disk search</a><br/>
 <a href="categories.php" target="pane">Manage categories</a><br/>
 <a href="empty.html" target="explorer">Clear explorer pane</a><br/>
+<a href="stats.php" target="pane">Stats</a><br/>
 
 
 <form action="<?= $_SERVER['PHP_SELF'] ?>">

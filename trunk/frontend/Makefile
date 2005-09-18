@@ -37,6 +37,8 @@ search_adv.php_html \
 search_adv_disk.php \
 search_adv_disk.php_html \
 search_disks.php_html \
+stats.php \
+stats.php_html \
 t.php \
 style.css \
 images/* \

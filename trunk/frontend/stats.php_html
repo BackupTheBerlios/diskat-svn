@@ -1,0 +1,59 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+
+<?= render_messages(); ?>
+
+<h1>DiskAt Statistics</h1>
+
+<form>
+<table border="1" cellspacing="0">
+
+<tr>
+<td>Disks</td>
+<td class="num"><?= $numDisks ?></td>
+</tr>
+
+<tr>
+<td>Files</td>
+<td class="num"><?= $numFiles ?></td>
+</tr>
+
+<tr>
+<td>Disk categories</td>
+<td class="num"><?= $numDiskCategories ?></td>
+</tr>
+
+<tr>
+<td>File categories</td>
+<td class="num"><?= $numFileCategories ?></td>
+</tr>
+
+<tr>
+<td>Assigned Disk categories</td>
+<td class="num"><?= $numAssignedDiskCategories ?></td>
+</tr>
+
+<tr>
+<td>Assigned File categories</td>
+<td class="num"><?= $numAssignedFileCategories ?></td>
+</tr>
+
+<tr>
+<td>Total size</td>
+<td class="num"><?= $totalSize != "?" ? number_format($totalSize, 2) : "?" ?>Gb</td>
+</tr>
+
+</table>
+
+<p>
+<input type="submit" name="moreDetails" value="More Details (slow)"/>
+</p>
+</form>
+
+<? echo returnToSearchResultsButton(); ?>
+
+</body>
+</html>
