@@ -1,5 +1,6 @@
 CREATE TABLE category(
   id INTEGER PRIMARY KEY,
   type INT NOT NULL,
+  value_type INT NOT NULL DEFAULT 1,
   name VARCHAR(128) NOT NULL
 );
