@@ -18,6 +18,7 @@
 <tr>
 <th>X</th>
 <th>Name</th>
+<th>Value Type</th>
 <th>Rename to</th>
 </tr>
 
@@ -27,6 +28,7 @@
       html_start_row();
       html_td('<input type="checkbox" name="ids[]" value="' . $row['id'] . '">');
       html_td($row['name']);
+      html_td($CATEGORY_VALUE_NAMES[$row['value_type']]);
       html_td('<input type="text" name="new_names[' . $row['id'] . ']">');
       html_end_row();
     }
@@ -41,6 +43,9 @@
 <td>
 <input type="hidden" name="add_type" value="<?= $type ?>">
 <input type="text" name="add_name">
+</td>
+<td>
+<?= html_select('value_type', $CATEGORY_VALUE_NAMES) ?>
 </td>
 <td>
 &nbsp;

@@ -3,6 +3,16 @@
 define('CATEGORY_FILE', 1);
 define('CATEGORY_DISK', 2);
 
+define('CATEGORY_VALUE_BOOLEAN', 1);
+define('CATEGORY_VALUE_INTEGER', 2);
+define('CATEGORY_VALUE_FLOAT',   3);
+
+$CATEGORY_VALUE_NAMES = array(
+	CATEGORY_VALUE_BOOLEAN=>'Boolean', 
+	CATEGORY_VALUE_INTEGER=>'Integer', 
+	CATEGORY_VALUE_FLOAT=>'Float'
+);
+
 function renderFileCategorySelect($addDefault = 0, $name = 'category') {
   $categories = db_query("
   	SELECT id, name 

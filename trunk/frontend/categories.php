@@ -13,8 +13,8 @@ db_open();
 if (isset($_REQUEST["bt_update"])) {
   if ($_REQUEST["add_name"] != "") {
     db_query("
-      INSERT INTO category(type, name)
-      VALUES ('".$_REQUEST["add_type"]."', '".$_REQUEST["add_name"]."')
+      INSERT INTO category(type, name, value_type)
+      VALUES ('".$_REQUEST["add_type"]."', '".$_REQUEST["add_name"]."', '" . $_REQUEST["value_type"] . "')
     ");
     add_request_message("Category added");
   }
