@@ -41,7 +41,7 @@ if (isset($_REQUEST['bt_search'])) {
 
   $term = convertWildcards($_REQUEST["term"]);
 
-  $crit = "Filename LIKE '%$term%'";
+  $crit = "(Filename LIKE '%$term%' OR BetterName LIKE '%$term%')";
 
   if (isset($_REQUEST["tag_pattern"])) {
     $tag = convertWildcards($_REQUEST['tag_pattern']);
