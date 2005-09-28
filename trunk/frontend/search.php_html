@@ -160,7 +160,9 @@ function allCheck(form)
   <br/>
   <input type="checkbox" name="checkall" onClick="allCheck(document.searchResults);">Select all<br/><br/>
   <input type="submit" name="bt_details" value="Details for selected files" />
-  <? renderFileCategorySelect(); html_select('cat_op', array('add'=>'Add', 'del'=>'Delete')); ?>
+  <? renderFileCategorySelect(); ?>
+  <input type="text" name="cat_value" size="5" />
+  <? html_select('cat_op', array('add'=>'Add', 'del'=>'Delete')); ?>
   <input type="submit" name="bt_applycat" value="Apply category" />
   <br/>
   <input type="submit" name="bt_multipart" value="Mark as multipart file" />

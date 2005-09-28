@@ -35,7 +35,7 @@ function renderDiskCategorySelect($name, $addDefault = 0, $addNone = 0) {
 
 function _getObjectCategories($ids, $table) {
   $categories = db_query("
-  	SELECT cat_id, obj_id, name
+  	SELECT cat_id, obj_id, name, value, value_type
   	FROM $table, category
   	WHERE cat_id=category.id
   	AND obj_id IN (" . implode(',', $ids). ")
@@ -46,8 +46,14 @@ function _getObjectCategories($ids, $table) {
   	if (!isset($res[$obj_id])) {
   	  $res[$obj_id] = array();
   	}
+
+  	$name = $row['name'];
+  	if ($row['value_type'] != CATEGORY_VALUE_BOOLEAN) {
+  	  $name .= "=${row['value']}";
+  	}
+
   	$existing = $res[$obj_id];
-  	$existing[$row['cat_id']] = $row['name'];
+  	$existing[$row['cat_id']] = $name;
   	$res[$obj_id] = $existing;
   }
   return $res;
@@ -81,7 +87,7 @@ function getDiskCategoryMap() {
   return _getCategoryMap('category_map_disk');
 }
 
-function _addCategoryToObjects($categoryId, $ids, $table) {
+function _addCategoryToObjects($categoryId, $categoryValue, $ids, $table) {
   $tstamp = date("YmdHis");
   $map = _getCategoryMap($table);
   $count = 0;
@@ -89,8 +95,8 @@ function _addCategoryToObjects($categoryId, $ids, $table) {
   foreach ($ids as $id) {
     if (!isset($map[$categoryId][$id])) {
       db_query("
-        INSERT INTO $table(cat_id, obj_id, tstamp)
-        VALUES ($categoryId, $id, '$tstamp')
+        INSERT INTO $table(cat_id, obj_id, value, tstamp)
+        VALUES ($categoryId, $id, '$categoryValue', '$tstamp')
       ");
       $count++;
     }
@@ -99,12 +105,12 @@ function _addCategoryToObjects($categoryId, $ids, $table) {
   return $count;
 }
 
-function addCategoryToFiles($categoryId, $fileIds) {
-  return _addCategoryToObjects($categoryId, $fileIds, 'category_map');
+function addCategoryToFiles($categoryId, $fileIds, $categoryValue = NULL) {
+  return _addCategoryToObjects($categoryId, $categoryValue, $fileIds, 'category_map');
 }
 
-function addCategoryToDisks($categoryId, $diskIds) {
-  return _addCategoryToObjects($categoryId, $diskIds, 'category_map_disk');
+function addCategoryToDisks($categoryId, $diskIds, $categoryValue = NULL) {
+  return _addCategoryToObjects($categoryId, $categoryValue, $diskIds, 'category_map_disk');
 }
 
 function _removeCategoryFromObjects($categoryId, $ids, $table) {
