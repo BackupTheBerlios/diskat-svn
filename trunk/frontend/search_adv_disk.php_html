@@ -6,7 +6,7 @@
 <body>
 <h1>Disk search</h1>
 <form action="<?= $_SERVER['PHP_SELF'] ?>">
-Limit by tag: <input type="text" name="tag_pattern" value="%"><br/>
+Limit by tag: <input type="text" name="tag_pattern" value="*"><br/>
 Title substring: <input type="text" name="term"><br/>
 Disk category: <? html_select('category_not',  array(' '=>' ', 'not'=>'not')); ?> 
 	       <? renderDiskCategorySelect('category',  ' ', '&lt;empty&gt;'); ?><br>

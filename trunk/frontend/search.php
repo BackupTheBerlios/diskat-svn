@@ -16,15 +16,17 @@ if (1 || $_REQUEST["submit"]) {
   htmldb_set_hilight_words(array($_REQUEST["term"]));
 
   {
-    $disk_by_tag = fetchDisksByCriteria("tag = '".$_REQUEST["term"] ."'");
+    $disk_by_tag = fetchDisksByCriteria("tag = '" . $_REQUEST["term"] ."'");
     if (db_num_rows($disk_by_tag) == 0) unset($disk_by_tag);
   }
 
   if ($_REQUEST["what"] == "disk") {
     saveSearchParams($_SERVER['PHP_SELF'], array('what', 'tag_pattern', 'tag', 'term'));
-    $t = $_REQUEST['term'];
-    $tag = $_REQUEST['tag_pattern'];
-    $disks = fetchDisksByCriteria("tag LIKE '$tag' AND (title LIKE '%$t%' OR label LIKE '%$t%')");
+
+    $term = convertWildcards($_REQUEST['term']);
+    $tag = convertWildcards($_REQUEST['tag_pattern']);
+    $disks = fetchDisksByCriteria("tag LIKE '$tag' AND (title LIKE '%$term%' OR label LIKE '%$term%')");
+
     if (db_num_rows($disks) == 0) {
       unset($disks);
     } else {
@@ -35,10 +37,15 @@ if (1 || $_REQUEST["submit"]) {
 
   if ($_REQUEST["what"] == "file") {
     saveSearchParams($_SERVER['PHP_SELF'], array('what', 'tag_pattern', 'tag', 'term'));
-    $crit = "(Filename LIKE '%".$_REQUEST["term"]."%' OR BetterName LIKE '%".$_REQUEST["term"]."%')";
+
+    $term = convertWildcards($_REQUEST["term"]);
+
+    $crit = "(Filename LIKE '%$term%' OR BetterName LIKE '%$term%')";
     if (isset($_REQUEST["tag_pattern"])) {
-      $crit .= "AND disk.tag LIKE '" . $_REQUEST['tag_pattern'] . "'";
+      $tag = convertWildcards($_REQUEST['tag_pattern']);
+      $crit .= " AND disk.tag LIKE '$tag'";
     }
+
     $t1 = getmicrotime();
     $files = fetchFilesByCriteria($crit);
     $searchTime = getmicrotime() - $t1;

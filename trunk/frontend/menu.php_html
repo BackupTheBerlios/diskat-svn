@@ -6,7 +6,7 @@
 <input type="radio" name="what" value="disk">Disk
 <input type="radio" name="what" value="file" checked="1">File
 <br>
-Limit by tag: <input type="text" name="tag_pattern" value="F%">
+Limit by tag: <input type="text" name="tag_pattern" value="F*">
 <input type="submit" name="submit" value="Search">
 <input type="reset" name="clear" value="Clear">
 </form>

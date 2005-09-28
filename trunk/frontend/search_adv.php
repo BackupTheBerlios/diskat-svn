@@ -39,10 +39,13 @@ if (isset($_REQUEST['bt_search'])) {
 
   $tables = array();
 
-  $crit = "Filename LIKE '%".$_REQUEST["term"]."%'";
+  $term = convertWildcards($_REQUEST["term"]);
+
+  $crit = "Filename LIKE '%$term%'";
 
   if (isset($_REQUEST["tag_pattern"])) {
-    $crit .= " AND disk.tag LIKE '" . $_REQUEST['tag_pattern'] . "'";
+    $tag = convertWildcards($_REQUEST['tag_pattern']);
+    $crit .= " AND disk.tag LIKE '$tag'";
   }
 
   if ($_REQUEST['min_size'] != '' || $_REQUEST['max_size'] != '') {

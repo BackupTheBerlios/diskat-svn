@@ -24,4 +24,10 @@ function convertSize($sz) {
   return $sz;
 }
 
+function convertWildcards($string) {
+	$s = str_replace('*', '%', $string);
+	$s = str_replace('?', '_', $s);
+	return $s;
+}
+
 ?>

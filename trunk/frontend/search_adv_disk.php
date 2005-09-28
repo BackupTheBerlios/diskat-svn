@@ -46,10 +46,12 @@ if (isset($_REQUEST['bt_search'])) {
 
   $tables = array();
 
-  $crit = "title LIKE '%".$_REQUEST["term"]."%'";
+  $term = convertWildcards($_REQUEST["term"]);
+  $crit = "(title LIKE '%$term%' OR label LIKE '%$term%')";
 
-  if (isset($_REQUEST["tag_pattern"])) {
-    $crit .= " AND disk.tag LIKE '" . $_REQUEST['tag_pattern'] . "'";
+  if (isset($_REQUEST['tag_pattern'])) {
+    $tag = convertWildcards($_REQUEST['tag_pattern']);
+    $crit .= " AND disk.tag LIKE '$tag'";
   }
 
   $left_join = '';
