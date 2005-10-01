@@ -7,11 +7,13 @@ include_once('include/File.php');
 include_once('include/Category.php');
 include_once('config.inc');
 
-function make_category_criteria($categoryId, $not) {
+function make_category_criteria($categoryId, $not, $from = 0, $to = 0) {
   global $tables;
   if ($categoryId) {
     if ($not == 'not') {
       return " AND FileId NOT IN (SELECT obj_id FROM category_map WHERE cat_id=" . $categoryId . ")";
+    } else if ($not == 'between') {
+      return " AND FileId IN (SELECT obj_id FROM category_map WHERE cat_id=" . $categoryId . " AND value >= $from AND value <= $to)";
     } else {
       return " AND FileId IN (SELECT obj_id FROM category_map WHERE cat_id=" . $categoryId . ")";
 // Doesn't work with boolean connectives
@@ -28,8 +30,8 @@ if (isset($_REQUEST['bt_search'])) {
   saveSearchParams(
     $_SERVER['PHP_SELF'], 
     array('bt_search', 'tag_pattern', 'term', 'min_size', 'max_size',
-      'category', 'category2', 'category3', 'category4', 
-      'category_not', 'category_not2', 'category_not3', 'category_not4', 
+      'category1', 'category2', 'category3', 'category4', 
+      'category_not1', 'category_not2', 'category_not3', 'category_not4', 
       'files_only', 'group_by_disk',
       'sort'
     )
@@ -59,10 +61,22 @@ if (isset($_REQUEST['bt_search'])) {
     }
   }
 
-  $crit .= make_category_criteria($_REQUEST['category'], $_REQUEST['category_not']);
-  $crit .= make_category_criteria($_REQUEST['category2'], $_REQUEST['category_not2']);
-  $crit .= make_category_criteria($_REQUEST['category3'], $_REQUEST['category_not3']);
-  $crit .= make_category_criteria($_REQUEST['category4'], $_REQUEST['category_not4']);
+  $crit .= make_category_criteria(
+    $_REQUEST['category1'], $_REQUEST['category_not1'],
+    $_REQUEST['category_from1'], $_REQUEST['category_to1']
+  );
+  $crit .= make_category_criteria(
+    $_REQUEST['category2'], $_REQUEST['category_not2'],
+    $_REQUEST['category_from2'], $_REQUEST['category_to2']
+  );
+  $crit .= make_category_criteria(
+    $_REQUEST['category3'], $_REQUEST['category_not3'],
+    $_REQUEST['category_from3'], $_REQUEST['category_to3']
+  );
+  $crit .= make_category_criteria(
+    $_REQUEST['category4'], $_REQUEST['category_not4'],
+    $_REQUEST['category_from4'], $_REQUEST['category_to4']
+  );
 
   if (isset($_REQUEST["files_only"])) {
     $crit .= " AND is_dir=0";

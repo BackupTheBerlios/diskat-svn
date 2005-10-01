@@ -36,8 +36,8 @@ if (isset($_REQUEST['bt_search'])) {
   saveSearchParams(
     $_SERVER['PHP_SELF'], 
     array('bt_search', 'tag_pattern', 'term',
-      'category', 'category2', 'category3', 'category4', 
-      'category_not', 'category_not2', 'category_not3', 'category_not4', 
+      'category1', 'category2', 'category3', 'category4', 
+      'category_not1', 'category_not2', 'category_not3', 'category_not4', 
       'sort', 
     )
   );
@@ -55,10 +55,10 @@ if (isset($_REQUEST['bt_search'])) {
   }
 
   $left_join = '';
-  if ($_REQUEST['category'] == -1) {
+  if ($_REQUEST['category1'] == -1) {
     $left_join = 'LEFT JOIN category_map_disk ON disk.id=category_map_disk.obj_id';
   }
-  $crit .= make_category_criteria($_REQUEST['category'], $_REQUEST['category_not']);
+  $crit .= make_category_criteria($_REQUEST['category1'], $_REQUEST['category_not1']);
   $crit .= make_category_criteria($_REQUEST['category2'], $_REQUEST['category_not2']);
   $crit .= make_category_criteria($_REQUEST['category3'], $_REQUEST['category_not3']);
   $crit .= make_category_criteria($_REQUEST['category4'], $_REQUEST['category_not4']);
