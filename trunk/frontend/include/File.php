@@ -106,7 +106,7 @@ function fetchFilesByParentId($id)
   		is_dir
   	FROM directory
   	WHERE directory.parent='$id'
-  	ORDER BY Filename
+  	ORDER BY is_dir DESC, Filename
   ");
 }
 
