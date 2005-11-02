@@ -1,6 +1,7 @@
+import time
+import string
 import diskat_config
 import DbConn
-import time
 
 
 class Category:
@@ -17,14 +18,14 @@ class Category:
         if cursor.rowcount != 1: return None
         return cursor.fetchone()
 
-    def addFileCategory(self, fileId, categoryId, timeStamp = None):
+    def addFileCategory(self, fileId, categoryId, value = None, timeStamp = None):
         if timeStamp == None: 
             timeStamp = time.strftime("%Y%m%d%H%M%S", time.localtime(time.time()))
         cursor = self.connection.getCursor()
         cursor.execute("""\
-            INSERT INTO category_map(cat_id, obj_id, tstamp) 
-            VALUES (%d, %d, '%s')
-        """ % (categoryId, fileId, timeStamp))
+            INSERT INTO category_map(cat_id, obj_id, value, tstamp) 
+            VALUES (%d, %d, %s, '%s')
+        """ % (categoryId, fileId, DbConn.quote(value), timeStamp))
         self.connection.commit()
 
     def deleteFileCategory(self, fileId, categoryId):
@@ -35,3 +36,9 @@ class Category:
         """ % (categoryId, fileId))
         self.connection.commit()
 
+    def isCategoriesAssignedToFiles(self, fileIds):
+        cursor = self.connection.getCursor()
+        fileIds = map(lambda x: str(x), fileIds)
+        cursor.execute("SELECT * FROM category_map WHERE obj_id IN (%s) LIMIT 1" % (string.join(fileIds, ",")))
+        if cursor.rowcount != 0: return True
+        return False

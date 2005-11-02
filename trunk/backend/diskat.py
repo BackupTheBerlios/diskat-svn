@@ -29,6 +29,10 @@ def usage():
     sys.stdout.write("	--path= - override disk's mount path (useful with -u)\n")
     sys.exit(1)
 
+def fail(msg):
+    sys.stderr.write("Error: " + msg + "\n")
+    sys.exit(1)
+
 def set_command(cmd, param):
     global command, command_arg
     if command != 0: usage()
@@ -87,12 +91,18 @@ def update_operation(opts):
         add_operation(opts)
     else:
         v = Volume.Volume(opts.get("--path", disk.root))
-        app.clearDiskContents(disk.id)
+        #app.clearDiskContents(disk.id)
         if opts.has_key("--no-archive"):
             v.setRecurseArchives(0)
+        else:
+            fail("Update requires --no-archive")
         sys.stdout.write("Adding files: ")
-        stats = app.catalogDisk(v, disk.id)
-        app.commit()
+        stats = app.updateDisk(v, disk.id, int(opts.get("--debug", "0")))
+        if opts.has_key("--force"):
+            app.commit()
+        else:
+            app.rollback()
+            print "Operation NOT completed - review proposed changes above and rerun with --force if they are ok"
         print "Updated disk", command_arg
         printStats(stats)
 
@@ -116,7 +126,7 @@ def printStats(stats):
     print ""
 
 optlist, args = getopt.getopt(
-  sys.argv[1:], "h?a:d:u:", ["add=", "delete=", "update=", "no-archive", "quiet", "tag=", "title=", "path="]
+  sys.argv[1:], "h?a:d:u:", ["add=", "delete=", "update=", "no-archive", "quiet", "tag=", "title=", "path=", "debug=", "force"]
 )
 opts = {}
 for opt, param in optlist:

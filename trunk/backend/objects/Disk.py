@@ -13,3 +13,9 @@ class Disk:
         if cursor.rowcount != 1: return None
         return cursor.fetchone()
 
+    def findById(self, diskId):
+        cursor = self.connection.getCursor()
+        cursor.execute("SELECT * FROM disk WHERE id=%d" % diskId)
+        if cursor.rowcount != 1: return None
+        return cursor.fetchone()
+

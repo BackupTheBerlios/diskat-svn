@@ -16,5 +16,8 @@ class DbConn:
     def commit(self):
         self.conn.commit()
 
+    def rollback(self):
+        self.conn.rollback()
+
 def quote(str):
     return sqlite.main._quote(str)
