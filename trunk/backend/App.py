@@ -189,20 +189,26 @@ class DbUpdateDumper(DbDumper):
             matchFound = False
 
             if self.filenameMap.has_key(newFile.name):
-                assert len(self.filenameMap[newFile.name]) == 1, "Only 1 match is supported"
+                completeMatches = []
                 for match in self.filenameMap[newFile.name]: 
                     cmpr = newFile.compare(FileInfo(fromDb = match))
                     if self.debugLevel & DbUpdateDumper.DEBUG_STAGE_3:
                         print hex(cmpr), ":", match
                     assert cmpr & FileInfo.MATCH_TYPE, "Changing type is not supported"
                     if cmpr == FileInfo.MATCH_ALL:
-                        self.reparent(f[4], newFile, match)
-                        self.unsetByDbRec(match)
-                        matchFound = True
+                        completeMatches.append(match)
                     elif cmpr & FileInfo.MATCH_SIZE == 0:
                         pass # if sizes don't match, it's not match at all
                     else:
                         assert False, "This match type is not supported"
+
+                assert len(completeMatches) <= 1, "More than one complete match"
+                if len(completeMatches) == 1:
+                    self.reparent(f[4], newFile, completeMatches[0])
+                    self.unsetByDbRec(completeMatches[0])
+                    matchFound = True
+                else:
+                    assert False, "Non-complete match(es) not yet supported"
 
             if not matchFound and not newFile.isDir and self.sizeMap.has_key(newFile.size):
                 if self.debugLevel & DbUpdateDumper.DEBUG_STAGE_3:
