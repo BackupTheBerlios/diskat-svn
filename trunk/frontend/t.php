@@ -10,7 +10,8 @@ echo '<?xml version="1.0" encoding="windows-1251"?>
 ';
 echo "<directory>\n";
 while ($row = db_fetch_assoc($res)) {
-  echo '<file id="'.$row['FileId'].'" name="'.htmlspecialchars($row['Filename']).'" dir="'.$row['is_dir'].'"/>' . "\n";
+  echo '<file id="'.$row['FileId'].'" name="'.htmlspecialchars($row['Filename']).'" '
+  	.'dir="'.$row['is_dir'].'" size="' . $row['size'] . '"/>' . "\n";
 }
 echo "</directory>\n";
 

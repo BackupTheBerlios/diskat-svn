@@ -103,6 +103,7 @@ function fetchFilesByParentId($id)
   return db_query("
   	SELECT  directory.id as FileId,
   		name as Filename,
+  		size,
   		is_dir
   	FROM directory
   	WHERE directory.parent='$id'
