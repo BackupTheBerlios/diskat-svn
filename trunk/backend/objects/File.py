@@ -1,3 +1,4 @@
+import string
 import diskat_config
 import DbConn
 import Disk
@@ -24,6 +25,14 @@ class File:
     def findByDiskId(self, diskId):
         cursor = self.connection.getCursor()
         cursor.execute("SELECT * FROM directory WHERE snapshot=%d" % (diskId))
+        return cursor.fetchall()
+
+    def findBySizesWithinDiskSubset(self, sizes, diskPattern):
+        cursor = self.connection.getCursor()
+        cursor.execute("""\
+            SELECT directory.* FROM directory, disk 
+            WHERE directory.snapshot=disk.id 
+            AND size IN (%s) AND tag like '%s'""" % (string.join(sizes, ","), diskPattern))
         return cursor.fetchall()
 
 class DirectoryResolver:
