@@ -200,7 +200,7 @@ class DbUpdateDumper(DbDumper):
                     elif cmpr & FileInfo.MATCH_SIZE == 0:
                         pass # if sizes don't match, it's not match at all
                     else:
-                        assert False, "This match type is not supported"
+                        assert False, "This match type is not supported: %d" % cmpr
 
                 assert len(completeMatches) <= 1, "More than one complete match"
                 if len(completeMatches) == 1:
